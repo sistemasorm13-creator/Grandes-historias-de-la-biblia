@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historias Sagradas</title>
     <!-- Importación de fuentes premium desde Google Fonts -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Variables de color de la paleta solicitada */
+        /* Variables de color de la paleta original */
         :root {
             --bg-principal: #1F140E; /* Café espresso profundo */
             --bg-tarjeta: #2D1E16;    /* Café cálido medio */
             --texto-oro: #D4AF37;     /* Dorado elegante */
             --texto-beige: #E6DCD3;   /* Beige suave para lectura */
             --texto-sub: #B5A496;     /* Beige apagado para sutilezas */
-            --reproductor-bg: rgba(45, 30, 22, 0.85); /* Vidrio esmerilado café */
+            --reproductor-bg: rgba(45, 30, 22, 0.92); /* Vidrio esmerilado café */
+            --font-size-lectura: 1.05rem;
         }
 
         * {
@@ -33,35 +34,40 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            padding-bottom: 100px; /* Espacio para que el reproductor no tape contenido */
+            padding-bottom: 110px; /* Espacio para que el reproductor no tape contenido */
         }
 
         /* Contenedor simulador de pantalla móvil o lectura enfocada */
         .app-container {
             width: 100%;
             max-width: 480px;
-            padding: 30px 20px;
+            padding: 25px 20px;
             position: relative;
+        }
+
+        /* Utilidad de Visibilidad */
+        .oculto {
+            display: none !important;
         }
 
         /* 1. ENCABEZADO */
         header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         h1 {
             font-family: 'Cinzel', serif;
             color: var(--texto-oro);
-            font-size: 2.2rem;
+            font-size: 2rem;
             letter-spacing: 2px;
-            font-weight: 400;
-            margin-bottom: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .versiculo {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--texto-sub);
             font-style: italic;
             line-height: 1.5;
@@ -72,15 +78,15 @@
         /* 2. MENÚ DE APARTADOS (Navegación deslizable horizontal) */
         .nav-apartados {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             overflow-x: auto;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-            scrollbar-width: none; /* Ocultar barra en Firefox */
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            scrollbar-width: none;
         }
 
         .nav-apartados::-webkit-scrollbar {
-            display: none; /* Ocultar barra en Chrome/Safari */
+            display: none;
         }
 
         .btn-tab {
@@ -90,15 +96,18 @@
             font-size: 0.85rem;
             font-family: 'Inter', sans-serif;
             white-space: nowrap;
-            padding: 6px 12px;
+            padding: 6px 14px;
             cursor: pointer;
             transition: all 0.3s ease;
+            border-radius: 20px;
+            border: 1px solid transparent;
         }
 
         .btn-tab.active {
             color: var(--texto-oro);
             font-weight: 500;
-            border-bottom: 1px solid var(--texto-oro);
+            border-color: rgba(212, 175, 55, 0.4);
+            background: rgba(212, 175, 55, 0.05);
         }
 
         /* 3. SECCIÓN DE HISTORIAS (Cuadrícula) */
@@ -110,68 +119,161 @@
 
         .tarjeta-historia {
             background-color: var(--bg-tarjeta);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            border-radius: 12px;
-            padding: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 14px;
+            padding: 22px 15px;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .tarjeta-historia:hover {
-            transform: translateY(-3px);
-            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
-        /* Iconos estilizados usando CSS vectorial */
         .icono-svg {
             width: 44px;
             height: 44px;
-            margin: 0 auto 15px auto;
+            margin-bottom: 12px;
             stroke: var(--texto-oro);
             fill: none;
-            stroke-width: 1.2;
+            stroke-width: 1.3;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
 
         .titulo-historia {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--texto-beige);
             line-height: 1.4;
-            font-weight: 400;
+            font-weight: 500;
         }
 
-        /* 4. REPRODUCTOR DE AUDIO FIJO (Efecto Glassmorphism) */
+        /* 4. VISTA DE LECTURA DE HISTORIA */
+        .vista-lectura {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .top-bar-lectura {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-volver {
+            background: none;
+            border: none;
+            color: var(--texto-oro);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .controles-texto {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-size {
+            background: var(--bg-tarjeta);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--texto-beige);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .lectura-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .lectura-titulo {
+            font-family: 'Cinzel', serif;
+            color: var(--texto-oro);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .lectura-meta {
+            font-size: 0.78rem;
+            color: var(--texto-sub);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .separador-oro {
+            width: 60px;
+            height: 1px;
+            background: var(--texto-oro);
+            margin: 20px auto;
+            opacity: 0.5;
+        }
+
+        .lectura-cuerpo {
+            font-size: var(--font-size-lectura);
+            line-height: 1.8;
+            color: var(--texto-beige);
+            text-align: justify;
+        }
+
+        .lectura-cuerpo p {
+            margin-bottom: 18px;
+        }
+
+        /* 5. REPRODUCTOR DE AUDIO FIJO */
         .audio-player {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 440px;
+            width: calc(100% - 30px);
+            max-width: 450px;
             background: var(--reproductor-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.25);
             border-radius: 16px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
             z-index: 100;
         }
 
         .player-info {
             flex: 1;
             margin-right: 15px;
+            overflow: hidden;
         }
 
         .player-title {
             font-size: 0.85rem;
             font-weight: 500;
             color: var(--texto-beige);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             margin-bottom: 4px;
         }
 
@@ -180,33 +282,33 @@
             color: var(--texto-sub);
         }
 
-        /* Barra de progreso minimalista */
         .progress-bar-container {
             width: 100%;
-            height: 3px;
-            background: rgba(230, 220, 211, 0.2);
+            height: 4px;
+            background: rgba(230, 220, 211, 0.15);
             border-radius: 2px;
-            margin-top: 6px;
+            margin-top: 8px;
+            cursor: pointer;
             position: relative;
         }
 
         .progress-bar-fill {
-            width: 35%; /* Simulación de progreso */
+            width: 0%;
             height: 100%;
             background: var(--texto-oro);
             border-radius: 2px;
+            transition: width 0.1s linear;
         }
 
         .player-controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
-        /* Botón de reproducción minimalista circular */
         .btn-play {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--texto-oro);
             border: none;
@@ -214,101 +316,355 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: transform 0.1s ease, opacity 0.2s;
+            flex-shrink: 0;
         }
 
-        .btn-play:hover {
-            opacity: 0.9;
+        .btn-play:active {
+            transform: scale(0.95);
         }
 
         .btn-play svg {
             fill: var(--bg-principal);
-            width: 14px;
-            height: 14px;
-            margin-left: 2px; /* Centrado óptico del triángulo de Play */
+            width: 16px;
+            height: 16px;
         }
 
-        .btn-timer {
-            background: none;
-            border: none;
+        /* Mensaje de cuadrícula vacía */
+        .empty-msg {
+            grid-column: span 2;
+            text-align: center;
             color: var(--texto-sub);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-timer svg {
-            stroke: var(--texto-sub);
-            fill: none;
-            width: 18px;
-            height: 18px;
+            padding: 40px 0;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
+    <!-- Elemento de Audio Oculto -->
+    <audio id="audio-element"></audio>
+
     <div class="app-container">
         
-        <!-- 1. ENCABEZADO -->
-        <header>
-            <h1>Historias Sagradas</h1>
-            <p class="versiculo">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."</p>
-        </header>
+        <!-- VISTA DE CATÁLOGO / INICIO -->
+        <div id="vista-catalogo">
+            <!-- 1. ENCABEZADO -->
+            <header>
+                <h1>Historias Sagradas</h1>
+                <p class="versiculo">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."</p>
+            </header>
 
-        <!-- 2. APARTADOS -->
-        <nav class="nav-apartados">
-            <button class="btn-tab active">Inicio</button>
-            <button class="btn-tab">Antiguo Testamento</button>
-            <button class="btn-tab">Nuevo Testamento</button>
-            <button class="btn-tab">Personajes</button>
-            <button class="btn-tab">Devocionales</button>
-        </nav>
+            <!-- 2. NAVEGACIÓN DE CATEGORÍAS -->
+            <nav class="nav-apartados" id="nav-categorias">
+                <button class="btn-tab active" data-cat="todas">Todas</button>
+                <button class="btn-tab" data-cat="antiguo">Antiguo Testamento</button>
+                <button class="btn-tab" data-cat="nuevo">Nuevo Testamento</button>
+                <button class="btn-tab" data-cat="personajes">Personajes</button>
+            </nav>
 
-        <!-- 3. CUADRÍCULA DE HISTORIAS -->
-        <main class="grid-historias">
+            <!-- 3. GRID DE HISTORIAS -->
+            <main class="grid-historias" id="grid-historias">
+                <!-- Se genera dinámicamente con JS -->
+            </main>
+        </div>
+
+        <!-- VISTA DE LECTURA (Oculta por defecto) -->
+        <article id="vista-lectura" class="vista-lectura oculto">
+            <div class="top-bar-lectura">
+                <button class="btn-volver" id="btn-volver">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Volver
+                </button>
+                <div class="controles-texto">
+                    <button class="btn-size" id="btn-dec-font" title="Disminuir texto">A-</button>
+                    <button class="btn-size" id="btn-inc-font" title="Aumentar texto">A+</button>
+                </div>
+            </div>
+
+            <div class="lectura-header">
+                <div class="lectura-meta" id="lectura-categoria">Categoría</div>
+                <h2 class="lectura-titulo" id="lectura-titulo">Título de la Historia</h2>
+                <p class="versiculo" id="lectura-versiculo">Versículo de referencia</p>
+                <div class="separador-oro"></div>
+            </div>
+
+            <div class="lectura-cuerpo" id="lectura-cuerpo">
+                <!-- El texto completo se inserta dinámicamente -->
+            </div>
+        </article>
+
+        <!-- 4. REPRODUCTOR DE AUDIO FIJO -->
+        <div class="audio-player">
+            <div class="player-info">
+                <div class="player-title" id="player-title">Selecciona una historia</div>
+                <div class="player-sub" id="player-sub">Audio Narración</div>
+                <div class="progress-bar-container" id="progress-container">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            <div class="player-controls">
+                <button class="btn-play" id="btn-play" aria-label="Reproducir">
+                    <!-- Icono Play -->
+                    <svg id="svg-play" viewBox="0 0 24 24">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <!-- Icono Pause (Oculto) -->
+                    <svg id="svg-pause" class="oculto" viewBox="0 0 24 24">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LÓGICA DE LA APLICACIÓN (JAVASCRIPT) -->
+    <script>
+        /* === 1. BASE DE DATOS DE HISTORIAS === */
+        const historias = [
+            {
+                id: 1,
+                titulo: "El Pacto del Horizonte",
+                categoria: "antiguo",
+                versiculo: "Génesis 9:13 — 'Mi arco he puesto en las nubes, el cual será por señal del pacto...'",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                icono: `<path d="M2 16h20M4 16l2 4h12l2-4M9 12h6M12 8v4" />`,
+                contenido: `
+                    <p>Las aguas comenzaron a ceder lentamente, dejando al descubierto las cumbres de las montañas más altas. Tras meses de incertidumbre a bordo del arca, Noé observó por la pequeña ventana cómo el viento fresco traía consigo la promesa de un nuevo comienzo.</p>
+                    <p>En el horizonte, entre la bruma que se disipaba y los primeros rayos de luz dorada, apareció un arco multicolor que cruzaba el cielo. No era solo un fenómeno visible; era la firma de un pacto divino de renovación y esperanza para la tierra entera.</p>
+                    <p>Aquel día comprendieron que cada tormenta tiene un fin, y que la fidelidad trasciende las tempestades más oscuras.</p>
+                `
+            },
+            {
+                id: 2,
+                titulo: "El Eco en el Desierto",
+                categoria: "antiguo",
+                versiculo: "Éxodo 3:2 — 'Y se le apareció el Ángel de Jehová en una llama de fuego en medio de una zarza...'",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                icono: `<path d="M12 3L2 21h20L12 3z M12 3v18" />`,
+                contenido: `
+                    <p>El desierto de Horeb se extendía en un silencio sepulcral. Moisés, guiando el rebaño en la soledad del territorio árido, notó una resplandeciente llama entre las ramas de una zarza común.</p>
+                    <p>Lo asombroso no era el fuego, sino que la zarza se mantenía intacta, ardiendo sin consumirse. Al acercarse descalzo sobre la tierra santa, escuchó una voz firme y compasiva que llamaba su nombre y le asignaba una misión que cambiaría el destino de toda una nación.</p>
+                `
+            },
+            {
+                id: 3,
+                titulo: "El Faro en la Penumbra",
+                categoria: "nuevo",
+                versiculo: "Lucas 2:11 — 'Que os ha nacido hoy, en la ciudad de David, un Salvador, que es CRISTO el Señor.'",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                icono: `<path d="M12 2l2 4 4 2-4 2-2 4-2-4-4-2 4-2zM6 20l6-4 6 4" />`,
+                contenido: `
+                    <p>En una noche tranquila en los campos cercanos a Belén, unos pastores velaban guardando las vigilias de la noche sobre sus rebaños. De repente, la gloria celestial iluminó la noche oscura.</p>
+                    <p>Un pesebre humilde fue el escenario del acontecimiento más glorioso. La luz de la estrella no solo guio a los sabios del oriente, sino que encendió una llama inconmovible de esperanza para toda la humanidad.</p>
+                `
+            },
+            {
+                id: 4,
+                titulo: "La Calma sobre el Abismo",
+                categoria: "nuevo",
+                versiculo: "Marcos 4:39 — 'Y levantándose, reprendió al viento, y dijo al mar: Calla, enmudece.'",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                icono: `<path d="M12 3v12M5 9h14M3 15c3 3 15 3 18 0" />`,
+                contenido: `
+                    <p>Las olas rompían con fuerza desmedida sobre la pequeña barca de madera. Los discípulos, marineros experimentados, sentían el miedo apoderarse de sus corazones ante la furia de la tempestad en el Mar de Galilea.</p>
+                    <p>Mientras tanto, Jesús dormía plácidamente. Al despertarlo angustiados, Él se puso en pie y ordenó al viento y a las olas que guardaran silencio. Inmediatamente aconteció una grande bonanza, recordando que ninguna tormenta es superior al Creador.</p>
+                `
+            },
+            {
+                id: 5,
+                titulo: "El Retorno a Casa",
+                categoria: "personajes",
+                versiculo: "Lucas 15:20 — 'Y cuando aún estaba lejos, lo vio su padre, y fue movido a misericordia...'",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+                icono: `<path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M5 20c0-4 3-6 7-6s7 2 7 6" />`,
+                contenido: `
+                    <p>Caminando a pasos lentos y con ropas desgastadas, el joven regresaba por el largo camino hacia la propiedad de su padre. Tras haber perdido todo en tierras lejanas, solo anhelaba ser recibido como un trabajador más.</p>
+                    <p>Sin embargo, desde la distancia, su padre corrió a su encuentro con los brazos abiertos. Sin espacio para el reproche, hubo fiesta y restauración. Una manifestación profunda del amor que acoge sin reservas.</p>
+                `
+            },
+            {
+                id: 6,
+                titulo: "El Peso de la Corona",
+                categoria: "personajes",
+                versiculo: "1 Samuel 16:7 — '...porque el hombre mira lo que está delante de sus ojos, pero Jehová mira el corazón.'",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+                icono: `<path d="M2 4l3 12h14l3-12-5 4-5-6-5 6z" />`,
+                contenido: `
+                    <p>El joven pastor David pasaba sus días en los montes cuidando las ovejas de su padre, afinando su arpa y aprendiendo la valentía en el silencio. Nadie lo consideraba para grandes eventos.</p>
+                    <p>Sin embargo, cuando el profeta Samuel llegó en busca del nuevo rey de Israel, no fueron las apariencias ni la estatura los factores determinantes. El llamado divino encontró a aquel con un corazón dispuesto a servir.</p>
+                `
+            }
+        ];
+
+        /* === 2. ESTADO Y ELEMENTOS DOM === */
+        let historiaActual = historias[0];
+        let fontSizeActual = 1.05;
+
+        // Elementos del DOM
+        const gridHistorias = document.getElementById('grid-historias');
+        const navCategorias = document.getElementById('nav-categorias');
+        const vistaCatalogo = document.getElementById('vista-catalogo');
+        const vistaLectura = document.getElementById('vista-lectura');
+        const btnVolver = document.getElementById('btn-volver');
+
+        // Campos Lectura
+        const lecturaTitulo = document.getElementById('lectura-titulo');
+        const lecturaCategoria = document.getElementById('lectura-categoria');
+        const lecturaVersiculo = document.getElementById('lectura-versiculo');
+        const lecturaCuerpo = document.getElementById('lectura-cuerpo');
+        const btnIncFont = document.getElementById('btn-inc-font');
+        const btnDecFont = document.getElementById('btn-dec-font');
+
+        // Reproductor Audio
+        const audioElement = document.getElementById('audio-element');
+        const btnPlay = document.getElementById('btn-play');
+        const svgPlay = document.getElementById('svg-play');
+        const svgPause = document.getElementById('svg-pause');
+        const playerTitle = document.getElementById('player-title');
+        const playerSub = document.getElementById('player-sub');
+        const progressFill = document.getElementById('progress-fill');
+        const progressContainer = document.getElementById('progress-container');
+
+        /* === 3. FUNCIONES DE RENDERIZADO === */
+
+        // Cargar Tarjetas de Historias
+        function renderizarGrid(categoria = 'todas') {
+            gridHistorias.innerHTML = '';
             
-            <!-- Historia 1: El Pacto del Horizonte (Arca) -->
-            <div class="tarjeta-historia">
-                <svg class="icono-svg" viewBox="0 0 24 24">
-                    <path d="M2 16h20M4 16l2 4h12l2-4M9 12h6M12 8v4" />
-                </svg>
-                <div class="titulo-historia">El Pacto del Horizonte</div>
-            </div>
+            const filtradas = categoria === 'todas' 
+                ? historias 
+                : historias.filter(h => h.categoria === categoria);
 
-            <!-- Historia 2: El Eco en el Desierto (Tienda/Altar) -->
-            <div class="tarjeta-historia">
-                <svg class="icono-svg" viewBox="0 0 24 24">
-                    <path d="M12 3L2 21h20L12 3z M12 3v18" />
-                </svg>
-                <div class="titulo-historia">El Eco en el Desierto</div>
-            </div>
+            if (filtradas.length === 0) {
+                gridHistorias.innerHTML = `<div class="empty-msg">No hay historias disponibles en esta categoría.</div>`;
+                return;
+            }
 
-            <!-- Historia 3: El Faro en la Penumbra (Estrella/Pesebre) -->
-            <div class="tarjeta-historia">
-                <svg class="icono-svg" viewBox="0 0 24 24">
-                    <path d="M12 2l2 4 4 2-4 2-2 4-2-4-4-2 4-2zM6 20l6-4 6 4" />
-                </svg>
-                <div class="titulo-historia">El Faro en la Penumbra</div>
-            </div>
+            filtradas.forEach(h => {
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'tarjeta-historia';
+                tarjeta.innerHTML = `
+                    <svg class="icono-svg" viewBox="0 0 24 24">
+                        ${h.icono}
+                    </svg>
+                    <div class="titulo-historia">${h.titulo}</div>
+                `;
+                tarjeta.addEventListener('click', () => abrirHistoria(h));
+                gridHistorias.appendChild(tarjeta);
+            });
+        }
 
-            <!-- Historia 4: La Calma sobre el Abismo (Barco) -->
-            <div class="tarjeta-historia">
-                <svg class="icono-svg" viewBox="0 0 24 24">
-                    <path d="M12 3v12M5 9h14M3 15c3 3 15 3 18 0" />
-                </svg>
-                <div class="titulo-historia">La Calma sobre el Abismo</div>
-            </div>
+        // Abrir una historia completa
+        function abrirHistoria(historia) {
+            historiaActual = historia;
+            
+            lecturaTitulo.textContent = historia.titulo;
+            lecturaCategoria.textContent = getNombreCategoria(historia.categoria);
+            lecturaVersiculo.textContent = historia.versiculo;
+            lecturaCuerpo.innerHTML = historia.contenido;
 
-            <!-- Historia 5: El Retorno a Casa (Abrazo/Unión) -->
-            <div class="tarjeta-historia">
-                <svg class="icono-svg" viewBox="0 0 24 24">
-                    <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M5 20c0-4 3-6 7-6s7 2 7 6" />
-                </svg>
-                <div class="titulo-historia">El Retorno a Casa</div>
-            </div>
+            // Actualizar Reproductor con la historia seleccionada
+            playerTitle.textContent = historia.titulo;
+            playerSub.textContent = getNombreCategoria(historia.categoria);
+            audioElement.src = historia.audioUrl;
 
-            <!-- Historia 6: El Peso de la Corona (Corona) -->
-            <div class="tarjeta-historia">
-                <svg class="icono-svg" viewBox="0 0 24 24">
-                    <path d="M2 4l3 12h14l3-12-5 4-5-6-5 6z" />
-                </svg>
+            vistaCatalogo.classList.add('oculto');
+            vistaLectura.classList.remove('oculto');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function getNombreCategoria(catKey) {
+            const map = {
+                'antiguo': 'Antiguo Testamento',
+                'nuevo': 'Nuevo Testamento',
+                'personajes': 'Personajes'
+            };
+            return map[catKey] || 'Historia Sagrada';
+        }
+
+        /* === 4. CONTROL DEL REPRODUCTOR DE AUDIO === */
+
+        function toggleAudio() {
+            if (!audioElement.src) {
+                audioElement.src = historiaActual.audioUrl;
+                playerTitle.textContent = historiaActual.titulo;
+            }
+
+            if (audioElement.paused) {
+                audioElement.play();
+                svgPlay.classList.add('oculto');
+                svgPause.classList.remove('oculto');
+            } else {
+                audioElement.pause();
+                svgPlay.classList.remove('oculto');
+                svgPause.classList.add('oculto');
+            }
+        }
+
+        // Actualizar barra de progreso
+        audioElement.addEventListener('timeupdate', () => {
+            if (audioElement.duration) {
+                const pct = (audioElement.currentTime / audioElement.duration) * 100;
+                progressFill.style.width = `${pct}%`;
+            }
+        });
+
+        // Reiniciar botón al terminar audio
+        audioElement.addEventListener('ended', () => {
+            svgPlay.classList.remove('oculto');
+            svgPause.classList.add('oculto');
+            progressFill.style.width = '0%';
+        });
+
+        // Adelantar/retrasar al hacer clic en la barra
+        progressContainer.addEventListener('click', (e) => {
+            if (!audioElement.duration) return;
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audioElement.currentTime = pos * audioElement.duration;
+        });
+
+        /* === 5. EVENT LISTENERS Y NAVEGACIÓN === */
+
+        // Pestañas de categoría
+        navCategorias.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-tab')) {
+                document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                renderizarGrid(e.target.dataset.cat);
+            }
+        });
+
+        // Botón Volver al menú
+        btnVolver.addEventListener('click', () => {
+            vistaLectura.classList.add('oculto');
+            vistaCatalogo.classList.remove('oculto');
+        });
+
+        // Controles de Tamaño de Letra
+        btnIncFont.addEventListener('click', () => {
+            if (fontSizeActual < 1.4) {
+                fontSizeActual += 0.1;
+                document.documentElement.style.setProperty('--font-size-lectura', `${fontSizeActual}rem`);
+            }
+        });
+
+        btnDecFont.addEventListener('click', () => {
+            if (fontSizeActual > 0.85) {
+                fontSizeActual -= 0.1;
+                document.documentElement.style.setProperty('--font-size-lectura', `${fontSizeActual}rem`);
+            }
+        });
+
+        btnPlay.addEventListener('click', toggleAudio);
+
+        // Inicializar la aplicación
+        renderizarGrid();
+        playerTitle.textContent = historiaActual.titulo;
+        playerSub.textContent = getNombreCategoria(historiaActual.categoria);
+    </script>
+</body>
+</html>
