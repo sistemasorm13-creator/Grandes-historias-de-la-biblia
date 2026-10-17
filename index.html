@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias Sagradas</title>
+    <!-- Importación de fuentes premium desde Google Fonts -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variables de color de la paleta solicitada */
+        :root {
+            --bg-principal: #1F140E; /* Café espresso profundo */
+            --bg-tarjeta: #2D1E16;    /* Café cálido medio */
+            --texto-oro: #D4AF37;     /* Dorado elegante */
+            --texto-beige: #E6DCD3;   /* Beige suave para lectura */
+            --texto-sub: #B5A496;     /* Beige apagado para sutilezas */
+            --reproductor-bg: rgba(45, 30, 22, 0.85); /* Vidrio esmerilado café */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            font-family: 'Inter', sans-serif;
+            color: var(--texto-beige);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding-bottom: 100px; /* Espacio para que el reproductor no tape contenido */
+        }
+
+        /* Contenedor simulador de pantalla móvil o lectura enfocada */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        /* 1. ENCABEZADO */
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--texto-oro);
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .versiculo {
+            font-size: 0.9rem;
+            color: var(--texto-sub);
+            font-style: italic;
+            line-height: 1.5;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        /* 2. MENÚ DE APARTADOS (Navegación deslizable horizontal) */
+        .nav-apartados {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            scrollbar-width: none; /* Ocultar barra en Firefox */
+        }
+
+        .nav-apartados::-webkit-scrollbar {
+            display: none; /* Ocultar barra en Chrome/Safari */
+        }
+
+        .btn-tab {
+            background: none;
+            border: none;
+            color: var(--texto-sub);
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-tab.active {
+            color: var(--texto-oro);
+            font-weight: 500;
+            border-bottom: 1px solid var(--texto-oro);
+        }
+
+        /* 3. SECCIÓN DE HISTORIAS (Cuadrícula) */
+        .grid-historias {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .tarjeta-historia {
+            background-color: var(--bg-tarjeta);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tarjeta-historia:hover {
+            transform: translateY(-3px);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        /* Iconos estilizados usando CSS vectorial */
+        .icono-svg {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 15px auto;
+            stroke: var(--texto-oro);
+            fill: none;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .titulo-historia {
+            font-size: 0.9rem;
+            color: var(--texto-beige);
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        /* 4. REPRODUCTOR DE AUDIO FIJO (Efecto Glassmorphism) */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 440px;
+            background: var(--reproductor-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .player-info {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .player-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--texto-beige);
+            margin-bottom: 4px;
+        }
+
+        .player-sub {
+            font-size: 0.75rem;
+            color: var(--texto-sub);
+        }
+
+        /* Barra de progreso minimalista */
+        .progress-bar-container {
+            width: 100%;
+            height: 3px;
+            background: rgba(230, 220, 211, 0.2);
+            border-radius: 2px;
+            margin-top: 6px;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            width: 35%; /* Simulación de progreso */
+            height: 100%;
+            background: var(--texto-oro);
+            border-radius: 2px;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Botón de reproducción minimalista circular */
+        .btn-play {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--texto-oro);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-play:hover {
+            opacity: 0.9;
+        }
+
+        .btn-play svg {
+            fill: var(--bg-principal);
+            width: 14px;
+            height: 14px;
+            margin-left: 2px; /* Centrado óptico del triángulo de Play */
+        }
+
+        .btn-timer {
+            background: none;
+            border: none;
+            color: var(--texto-sub);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-timer svg {
+            stroke: var(--texto-sub);
+            fill: none;
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- 1. ENCABEZADO -->
+        <header>
+            <h1>Historias Sagradas</h1>
+            <p class="versiculo">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."</p>
+        </header>
+
+        <!-- 2. APARTADOS -->
+        <nav class="nav-apartados">
+            <button class="btn-tab active">Inicio</button>
+            <button class="btn-tab">Antiguo Testamento</button>
+            <button class="btn-tab">Nuevo Testamento</button>
+            <button class="btn-tab">Personajes</button>
+            <button class="btn-tab">Devocionales</button>
+        </nav>
+
+        <!-- 3. CUADRÍCULA DE HISTORIAS -->
+        <main class="grid-historias">
+            
+            <!-- Historia 1: El Pacto del Horizonte (Arca) -->
+            <div class="tarjeta-historia">
+                <svg class="icono-svg" viewBox="0 0 24 24">
+                    <path d="M2 16h20M4 16l2 4h12l2-4M9 12h6M12 8v4" />
+                </svg>
+                <div class="titulo-historia">El Pacto del Horizonte</div>
+            </div>
+
+            <!-- Historia 2: El Eco en el Desierto (Tienda/Altar) -->
+            <div class="tarjeta-historia">
+                <svg class="icono-svg" viewBox="0 0 24 24">
+                    <path d="M12 3L2 21h20L12 3z M12 3v18" />
+                </svg>
+                <div class="titulo-historia">El Eco en el Desierto</div>
+            </div>
+
+            <!-- Historia 3: El Faro en la Penumbra (Estrella/Pesebre) -->
+            <div class="tarjeta-historia">
+                <svg class="icono-svg" viewBox="0 0 24 24">
+                    <path d="M12 2l2 4 4 2-4 2-2 4-2-4-4-2 4-2zM6 20l6-4 6 4" />
+                </svg>
+                <div class="titulo-historia">El Faro en la Penumbra</div>
+            </div>
+
+            <!-- Historia 4: La Calma sobre el Abismo (Barco) -->
+            <div class="tarjeta-historia">
+                <svg class="icono-svg" viewBox="0 0 24 24">
+                    <path d="M12 3v12M5 9h14M3 15c3 3 15 3 18 0" />
+                </svg>
+                <div class="titulo-historia">La Calma sobre el Abismo</div>
+            </div>
+
+            <!-- Historia 5: El Retorno a Casa (Abrazo/Unión) -->
+            <div class="tarjeta-historia">
+                <svg class="icono-svg" viewBox="0 0 24 24">
+                    <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M5 20c0-4 3-6 7-6s7 2 7 6" />
+                </svg>
+                <div class="titulo-historia">El Retorno a Casa</div>
+            </div>
+
+            <!-- Historia 6: El Peso de la Corona (Corona) -->
+            <div class="tarjeta-historia">
+                <svg class="icono-svg" viewBox="0 0 24 24">
+                    <path d="M2 4l3 12h14l3-12-5 4-5-6-5 6z" />
+                </svg>
